@@ -1,0 +1,9 @@
+version: '00'
+services:
+  extractor:
+    build:
+      context: .
+    volumes:
+      - ./src:/code/src
+      - ./config/config.json:/data/config.json
+      - ./output:/data/out/tables/

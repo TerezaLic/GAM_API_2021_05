@@ -1,7 +1,7 @@
 import sys
 from json.decoder import JSONDecodeError
 from extractor_gam import GoogleAdMangerExtractor
-from config import Config
+from config import config
 
 # Deprecation = Feb 2022
 # Sunset = May 2022
