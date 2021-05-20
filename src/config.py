@@ -1,6 +1,7 @@
 import json
 import dateparser
-from keboola import docker
+from keboola.component import CommonInterface
+import logging
 
 DEFAULT_MAX_RETRIES = 5
 DEFAULT_DIMENSIONS = [
@@ -9,6 +10,7 @@ DEFAULT_DIMENSIONS = [
 DEFAULT_METRICS = [
     'AD_SERVER_IMPRESSIONS'
 ]
+
 
 class Config:
 
@@ -24,7 +26,12 @@ class Config:
 
     @staticmethod
     def load() -> dict:
-        cfg = docker.Config('/data/')
+
+        #cfg = docker.Config('/data/')
+        ci = CommonInterface()
+        ci.validate_configuration(REQUIRED_PARAMETERS)
+        logging.info(ci.environment_variables.project_id)
+        cfg = ci.configuration
         params = cfg.get_parameters()
 
         # check required fields
