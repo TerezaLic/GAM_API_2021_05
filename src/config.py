@@ -28,15 +28,17 @@ class Config:
     def load() -> dict:
 
         #cfg = docker.Config('/data/')
-        ci = CommonInterface()
-        ci.validate_configuration(REQUIRED_PARAMETERS)
+        ci = CommonInterface(data_folder_path='data')
         logging.info(ci.environment_variables.project_id)
         cfg = ci.configuration
-        params = cfg.get_parameters()
+        params = cfg.parameters
 
-        # check required fields
-        required = ("#private_key",
-                    "#client_email", "token_uri", "network_code")
+        # check required fields      
+        ## TL :  prozkoumat moznost nahrazeni nove: ..ci.validate_configuration(REQUIRED_PARAMETERS)  
+
+        required = ("network_code", "report_type","#private_key",
+                    "#client_email", "token_uri")
+
         for r in required:
             if r not in params:
                 raise ValueError(f'Missing required field "{r}".')
@@ -66,13 +68,14 @@ class Config:
         # parse date range
         date_from = dateparser.parse(params['date_from'])
         date_to = dateparser.parse(params['date_to'])
+        report_type = params['report_type']
 
         # validate report type
         allowed_types = ('HISTORICAL', 'AD_EXCHANGE', 'FUTURE','REACH')
         allowed_types_with_date = ('HISTORICAL', 'AD_EXCHANGE','FUTURE',)
         if params['report_type'] not in allowed_types:
             raise ValueError(
-                f"Invalid report type. Choose one from {allowed_type}"
+                f"Invalid report type. Choose one from {allowed_types}"
             )
 
         if not date_from and report_type  in allowed_types_with_date:
@@ -84,8 +87,8 @@ class Config:
         params['date_from'] = date_from.date()
         params['date_to'] = date_to.date()
 
-        # create file with private key
-        key_file = "/tmp/private_key.json"
+        # create file with private key     ## TL pro GAM musim byt input ve formatu 'private_key_file' s keys bez #
+        key_file = "tmp/private_key.json"
         params['private_key_file'] = Config.private_key_file(params, key_file)
 
         # set max retries count for retryable decorator
