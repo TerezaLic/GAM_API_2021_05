@@ -8,6 +8,7 @@
         "#client_email": "*****",
         "token_uri": "*****",
         "dimensions": [],
-        "metrics": []
+        "metrics": [],
+        "report_type":"HISTORICAL"
     }
 }
